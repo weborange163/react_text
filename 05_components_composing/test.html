@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>05_components_composing</title>
+</head>
+<body>
+<div>
+  <h2>Welcome A!</h2>
+  <h2>Welcome B!</h2>
+  <h2>Welcome C!</h2>
+</div>
+<hr>
+
+<div id="example"></div>
+
+<script src="../js/react.js"></script>
+<script src="../js/react-dom.js"></script>
+<script src="../js/babel.min.js"></script>
+
+<script type="text/babel">
+  /*
+   1. 拆分组件: 拆分界面, 抽取组件
+     * 单个标题组件: Welcome
+     * 应用组件: App
+   2. 分析确定传递数据和数据类型
+     * Welcome: props.name  string
+     * App: props.names    array
+   */
+  //定义组件 需要name填充值
+  /*function Welcome(props) {
+    return <h2>Hello {props.name}</h2>
+  }
+  //定义主组件,遍历时,获得name, 同时将数组的index作为key的值
+  class App extends React.Component{
+    render(){
+      return (
+        <div>
+          {
+            this.props.names.map((person, index) => {
+              return <Welcome name={person} key={index}/>
+            })
+          }
+        </div>
+      )
+    }
+  }
+  const people = ['Bob', 'Jack', 'John']
+  //渲染时,将数组people遍历,并赋给names, 因为定义时App的变量就是names
+  //遍历时,参数person被赋给name,所以 Welcome中定义时需要写为name
+  ReactDOM.render(<App names={people} />, document.getElementById('example'))
+   }
+  */
+  function Welcome(props){
+    return <h2>Hello {props.name}</h2>
+  }
+  class App extends React.Component{
+    render(){
+     return (
+       <div>
+         {
+           this.props.arr.map((p, index) => {
+             return <Welcome name={p} key={index}/>
+           })
+         }
+       </div>
+     )
+    }
+  }
+  const people = ['John', 'Bob', 'Jack']
+  ReactDOM.render(<App arr={people} />, document.getElementById('example'))
+
+
+</script>
+</body>
+</html>

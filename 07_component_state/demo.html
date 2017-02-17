@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>07_state_demo</title>
+</head>
+<body>
+  <div>
+    <h2>Simple TODO List</h2>
+    <input type="text">
+    <button>Add #4</button>
+    <ul>
+      <li>吃饭</li>
+      <li>睡觉</li>
+      <li>打豆豆</li>
+    </ul>
+  </div>
+  <hr>
+
+  <div id="example">在此实现页面效果和功能</div>
+
+  <script src="../js/react.js"></script>
+  <script src="../js/react-dom.js"></script>
+  <script src="../js/babel.min.js"></script>
+  <script type="text/babel">
+    /*
+    功能: 组件化实现此功能
+      1. 界面显示如上所示
+      2. 输入文本, 点击按钮显示到下面列表的首位, 并清除输入的文本
+     */
+    /*
+    分解组件:
+      列表: TodoList
+        props: todos
+      应用: App
+        state: todos, inputTodo
+     */
+    /*
+    问题: 完善功能
+      1). 如果没有输入或输入的只是空格, 不添加到列表
+      2). 如果输入的文本两边有空格, 去掉空格后添加
+    */
+/*
+* 1.拆分组件
+*   主组件: App
+*     添加Todo组件: TodoAdd  主组件有这2个部分构成,分别去定义
+*     列表组件: TodoList
+* 2.实现静态组件
+  3.显示动态初始化数据
+    确定状态:
+      状态定义在哪个组件中? 父组件
+      状态名:              todos
+      状态值的类型?         数组
+
+    确定页面里有哪些state(变化的数据):
+        列表  和 输入框的数据,其中,列表数据是共用的,要放在主组件里
+        用props从主组件传入子组件
+        父组件包裹着子组件,子组件可以取到父组件的值, 定义的子组件可以去操作父组件的值,
+* */
+class App extends React.Component{
+  constructor(props){
+    super(props)
+    this.add = this.add.bind(this)
+    this.state = {
+      //初始化状态
+      todos: ['吃饭11', '睡觉', '打豆豆', '扫地']
+    }
+  }
+  //添加todo
+  add(todo){
+    const todos = this.state.todos
+    //将todo添加到todos第一位
+    todos.unshift(todo)
+    this.setState({todos})
+  }
+        //子组件获取父组件的方法,数据,供子组件实现功能
+  render(){
+    return (
+      <div>
+        <TodoAdd count = {this.state.todos.length} add={this.add}/>
+        <TodoList todos1 = {this.state.todos}/>
+      </div>
+    )
+  }
+}
+//创建添加待办事项组件 TodoAdd
+    class TodoAdd extends React.Component{
+      constructor(props){
+        super(props)
+        this.addTodo = this.addTodo.bind(this)
+      }
+      addTodo(){
+        //读取输入的值
+        const text = this.refs.inputTodo.value.trim()
+        if(!text){
+          return
+        }
+        //保存到todos中,并更新界面(  必须调用this.setState()  )  App才有更新的能力
+        this.props.add(text)
+        this.refs.inputTodo.value = ''
+      }
+      render(){
+        return(
+        <div>
+          <h2>Simple TODO List</h2>
+          <input type="text" ref="inputTodo"/>
+          <button onClick={this.addTodo}>Add #{this.props.count+1}</button>
+        </div>
+        )
+      }
+    }
+    class TodoList extends React.Component{
+      render(){
+        return(
+          <ul>
+            {
+              this.props.todos1.map((todo, index) => {
+                return <li key={index}>{todo}</li>
+              })
+            }
+          </ul>
+        )
+      }
+    }
+ReactDOM.render(<App />, document.getElementById('example'))
+</script>
+</body>
+</html>
+
